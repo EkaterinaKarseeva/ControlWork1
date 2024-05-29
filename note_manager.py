@@ -1,5 +1,6 @@
 from note import Note
 import json
+from datetime import datetime
 
 class NoteManager:
     def __init__(self, filename='notes.json'):
@@ -21,6 +22,7 @@ class NoteManager:
         note = Note(title, content)
         self.notes.append(note.to_dict())
         self.save_notes()
+        print("Заметка успешно сохранена")
 
     def list_notes(self):
         return self.notes
@@ -38,10 +40,17 @@ class NoteManager:
                     note['title'] = title
                 if content:
                     note['content'] = content
+                note['created_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 self.save_notes()
+                print("Заметка успешно обновлена")
                 return True
         return False
 
     def delete_note(self, note_id):
         self.notes = [note for note in self.notes if note['id'] != note_id]
         self.save_notes()
+        print("Заметка успешно удалена")
+
+    def filter_notes_by_date(self, date):
+        return [note for note in self.notes if note['created_at'].startswith(date)]
+
